@@ -52,10 +52,17 @@ $(function() {
                }
             });
         },
-        postComment: function(data, success, error) {
-            setTimeout(function() {
-                success(data);
-            }, 500);
+        postComment: function(commentJSON, success, error) {
+            $.ajax({
+                type: 'post',
+                url: '/api/comments/',
+                data: JSON.stringify(commentJSON),
+                contentType: "application/json",
+                success: function(comment) {
+                    success(comment)
+                },
+                error: error
+            });
         },
         putComment: function(data, success, error) {
             setTimeout(function() {
