@@ -1,5 +1,6 @@
 $(function() {
     $('#comments-container').comments({
+        maxRepliesVisible: 5,
         profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
         roundProfilePictures: true,
         textareaPlaceholderText: 'Deja un comentario',
@@ -23,6 +24,7 @@ $(function() {
         textareaRows: 1,
         enableAttachments: false,
         enableEditing: true,
+        enableUpvoting:false,
         fieldMappings: {
             id: 'id',
             parent: 'parent',
@@ -64,25 +66,31 @@ $(function() {
                 error: error
             });
         },
-        putComment: function(data, success, error) {
-            setTimeout(function() {
-                success(data);
-            }, 500);
+        putComment: function(commentJSON, success, error) {
+            $.ajax({
+                type: 'put',
+                url: '/api/comments/' + commentJSON.id,
+                data: JSON.stringify(commentJSON),
+                contentType: "application/json",
+                success: function(comment) {
+                    success(comment)
+                },
+                error: error
+            });
         },
-        deleteComment: function(data, success, error) {
-            setTimeout(function() {
-                success();
-            }, 500);
-        },
-        upvoteComment: function(data, success, error) {
-            setTimeout(function() {
-                success(data);
-            }, 500);
+        deleteComment: function(commentJSON, success, error) {
+            $.ajax({
+                type: 'delete',
+                url: '/api/comments/' + commentJSON.id,
+                contentType: "application/json",
+                success: success,
+                error: error
+            });
         },
         uploadAttachments: function(dataArray, success, error) {
             setTimeout(function() {
                 success(dataArray);
             }, 500);
-        },
+        }
     });
 });
